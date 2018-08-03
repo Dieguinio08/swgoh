@@ -45,7 +45,7 @@ for ($i=0;$i<$nroM;$i++){
     $murl[$i]="https://swgoh.gg".substr($gremio, $pos1+6, (($pos2-$pos1)-7));
     $pos0=$pos2;
 }
-$nroM=2;
+//$nroM=2;
 $i=0;
 for ($i=0;$i<$nroM;$i++){
     $miembro=file_get_contents($murl[$i]);
@@ -62,7 +62,7 @@ for ($i=0;$i<$nroM;$i++){
     //arena
     $pos1=strpos($miembro, "Arena Rank");
     $pos2=strpos($miembro, "</h5>",$pos1);
-    $pos1=strpos($miembro, ">",$pos2-4)+1;
+    $pos1=strpos($miembro, ">",$pos2-6)+1;
     $marena[$i]=substr($miembro, $pos1, ($pos2-$pos1));
     print '"Arena":"'.$marena[$i].'", ';
     //Galactic Power C
@@ -159,6 +159,6 @@ for ($i=0;$i<$nroM;$i++){
         print '"Avance":"'.$ctotal[$i][$j].'"}';
     }
     print ']}';
-}
+}sleep(1);
 print ']}';
 ?>
