@@ -12,6 +12,7 @@ $pos = strpos($gremio, "og:url");
 $pos2 = strpos($gremio, '/>',$pos);
 $pos3=($pos2-$pos)-19;
 $url = substr($gremio, $pos+17, $pos3);
+print '{"GremioUrl":"'.$url.'", ';
 //Numero Miembros
 $pos = strpos($gremio, "Profiles");
 $pos2 = strpos($gremio, '/',$pos-10);
@@ -24,8 +25,8 @@ $arena=classtitles("Arena Rank",$gremio);
 $fecha=date('Y-m-d, h:i:s');
 //Miembros
 //en principio solo url completa y nombre
-$murl=array();$mnombre=array();$marena=array();$mgpc=array();$mgps=array();$mcscore=array();$mnroc=array();
-$cnombre=array();$cgear=array();$cstar=array();$cnivel=array();$cpower=array();$ctotal=array();
+$murl=array();$mnombre=array();$marena=array();$mgpc=array();$mgps=array();$mcscore=array();$mnroc=array();$aliado=array();
+$cnombre=array();$cgear=array();$cstar=array();$cnivel=array();$cpower=array();$ctotal=array();$curl=array();
 $pos0=strpos($gremio, "<tbody>");
 for ($i=0;$i<$nroM;$i++){
     $pos1=strpos($gremio, "value=",$pos0);
@@ -37,9 +38,17 @@ for ($i=0;$i<$nroM;$i++){
     $murl[$i]="https://swgoh.gg".substr($gremio, $pos1+6, (($pos2-$pos1)-7));
     $pos0=$pos2;
 }
+$nroM=1;
 $i=0;
-//for ($i=0;$i<$nroM;$i++){
+for ($i=0;$i<$nroM;$i++){
     $miembro=file_get_contents($murl[$i]);
+    //aliado
+    $pos1=strpos($miembro, "<p>Ally Code");
+    if(!empty($pos1)){
+        $pos2=strpos($miembro, "</strong>",$pos1);
+        $pos1=$pos1+40;
+        $aliado[$i]=substr($miembro, $pos1, ($pos2-$pos1));
+    }else{$aliado[$i]=0;}
     //arena
     $pos1=strpos($miembro, "Arena Rank");
     $pos2=strpos($miembro, "</h5>",$pos1);
@@ -68,13 +77,45 @@ $i=0;
     $pos0=$pos2;
     //Personajes
     $coleccion=file_get_contents($murl[$i]."collection/");
-    /*for ($j=0;$)
-    $pos0=strpos($miembro, "player-char-portrait char-portrait-full", $pos0);
-    $pos1=strpos($miembro, "href=", $pos0);
-    $pos2=strpos($miembro, "class", $pos1);*/
-//}
-    
-
-//}
-print $marena[$i];
+    $pos0=0;
+    $j=0;
+    for ($j=0;$j<$mnroc[$i];$j++){
+        //url
+        $pos0=strpos($coleccion, "player-char-portrait char-portrait-full", $pos0);
+        $pos1=strpos($coleccion, "href=", $pos0)+6;
+        $pos2=strpos($coleccion, "class", $pos1)-2;
+        $curl[$i][$j]="https://swgoh.gg".substr($coleccion, $pos1, ($pos2-$pos1));
+        $pos0=$pos2;
+        //Nombre
+        $pos1=strpos($coleccion, "alt=", $pos0)+5;
+        $pos2=strpos($coleccion, "height=", $pos1)-3;
+        $cnombre[$i][$j]=substr($coleccion, $pos1, ($pos2-$pos1));
+        $pos0=strpos($coleccion, ">", $pos2);
+        //estrellas
+        $pos1=strpos($coleccion, "star-inactive", $pos0);
+        if ((!empty($pos1)) && (($pos1-$pos0)<270)){$cstar[$i][$j]=substr($coleccion, $pos1-2,1);}else{$cstar[$i][$j]=7;}
+        $pos0=$pos2;
+        //Nivel
+        $pos1=strpos($coleccion, "char-portrait-full-level", $pos0)+26;
+        $pos2=strpos($coleccion, "</div>", $pos1);
+        $cnivel[$i][$j]=substr($coleccion, $pos1, ($pos2-$pos1));
+        $pos0=$pos2;
+        //gear
+        $pos1=strpos($coleccion, "char-portrait-full-gear-level", $pos0)+31;
+        $pos2=strpos($coleccion, "</div>", $pos1);
+        $cgear[$i][$j]=substr($coleccion, $pos1, ($pos2-$pos1));
+        $pos0=$pos2;
+        //Poder
+        $pos1=strpos($coleccion, "Power", $pos0)+6;
+        $pos2=strpos($coleccion, "/", $pos1)-1;
+        $cpower[$i][$j]=substr($coleccion, $pos1, ($pos2-$pos1));
+        $pos0=$pos2;
+        //Total
+        $pos1=strpos($coleccion, "collection-char-gp-progress-bar", $pos0)+47;
+        $pos2=strpos($coleccion, "%", $pos1);
+        $ctotal[$i][$j]=substr($coleccion, $pos1, ($pos2-$pos1));
+        $pos0=$pos2;
+        
+    }
+}
 ?>
