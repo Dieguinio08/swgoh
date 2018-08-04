@@ -82,7 +82,7 @@ for ($i=0;$i<$nroM;$i++){
     $pos1=strpos($miembro, ">", ($pos2-10))+1;
     $mnroc[$i]=substr($miembro, $pos1, ($pos2-$pos1));
     $pos0=$pos2;
-    print 'insert into miembros (Nombre, Url, Usuario, Aliado, NPersonajes, PoderC, PoderS, PColeccion, Arena, Gremmio, Fecha ) values (
+    print 'insert into miembros (Nombre, Url, Usuario, Aliado, NPersonajes, PoderC, PoderS, PColeccion, Arena, Gremio, Fecha ) values (
         "'.$mnombre[$i].'", "'.$murl[$i].'","'.$usuario[$i].'", "'.$aliado[$i].'", "'.$mnroc[$i].'", "'.$mgpc[$i].'","'.$mgps[$i].'","'.$mcscore[$i].'","'.$marena[$i].'","'.$Numero.'","'.$fecha.'");';
     //Personajes
     $coleccion=file_get_contents($murl[$i]."collection/");
@@ -142,8 +142,8 @@ for ($i=0;$i<$nroM;$i++){
         $pos2=strpos($coleccion, "%", $pos1);
         $ctotal[$i][$j]=substr($coleccion, $pos1, ($pos2-$pos1));
         $pos0=$pos2;
-        print 'insert into coleccionesp (Nombre, Url, Estrellas, Nivel, Gear, Poder, Avance, Usuario, Fecha) values (
-            "'.$cnombre[$i][$j].'", "'.$curl[$i][$j].'", "'.$cstar[$i][$j].'", "'.$cnivel[$i][$j].'", "'.$cgear[$i][$j].'","'.$cpower[$i][$j].'","'.$ctotal[$i][$j].'","'.$usuario[$i].'","'.$fecha.'");';
+        print 'insert into coleccionesp (Nombre, Url, Estrellas, Nivel, Gear, Poder, Avance, Usuario, Gremio, Fecha) values (
+            "'.$cnombre[$i][$j].'", "'.$curl[$i][$j].'", "'.$cstar[$i][$j].'", "'.$cnivel[$i][$j].'", "'.$cgear[$i][$j].'","'.$cpower[$i][$j].'","'.$ctotal[$i][$j].'","'.$usuario[$i].'","'.$Numero.'","'.$fecha.'");';
     }
 }sleep(0.5);
 ?>
